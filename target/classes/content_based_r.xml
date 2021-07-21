@@ -8,9 +8,10 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
 	<http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+	<expression-filter expression="#[payload != '/favicon.ico']" name="Expression" doc:name="Expression"/>
 	<flow name="content_based_rFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration" path="/greet" allowedMethods="GET" doc:name="HTTP"/>
-		<filter doc:name="Filter Reference"/>
+		<filter doc:name="Filter Reference" ref="Expression"/>
 		<set-variable variableName="language" value="#[message.inboundProperties.'http.query.params'.language]" doc:name="Variable"/>
 		<choice doc:name="Choice">
 			<when expression="#[flowVars.language=='Spanish']">
@@ -28,6 +29,6 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 	<sub-flow name="default-tranbslation">
 		<logger message="No language specified. Using English as a default. " level="INFO" doc:name="Logger"/>
 		<set-variable variableName="language" value="English" doc:name="Variable"/>
-		<set-payload doc:name="Set Payload"/>
+		<set-payload doc:name="Set Payload" value="Hello!"/>
 	</sub-flow>
 </mule>
